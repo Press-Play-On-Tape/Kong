@@ -458,6 +458,7 @@ void PlayGameState::update(StateMachine & machine) {
         uint8_t girderIndex = getDisabledGirderIndex();
 
         Girder &girder = this->girders[girderIndex];
+        girder.setPosition(0);
         girder.setEnabled(true);
 
       }
@@ -601,7 +602,15 @@ void PlayGameState::update(StateMachine & machine) {
       this->introDelay = 0;
       this->player.reset();
       this->lever.setPosition(LeverPosition::Off);
+      this->dinner.setVisible(true);
 
+      if (this->hook.getCounter() == 0) {
+        this->resetGorillaAndPlates();
+      }
+      else {
+        this->gorilla.reset();
+      }
+      
       if (justPressed & A_BUTTON) {
         this->preventJumpDelay = 20;
       }

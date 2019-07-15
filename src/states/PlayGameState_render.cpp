@@ -176,7 +176,7 @@ void PlayGameState::render(StateMachine & machine) {
     for (auto &girder : this->girders) {
 
       if (girder.isEnabled()) {
-  
+
         int8_t x = girder.getXPosition();
         int8_t y = girder.getYPosition(yOffset);
         uint8_t index = girder.getImage();

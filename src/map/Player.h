@@ -2,7 +2,19 @@
 
 #include "../utils/Enums.h"
 
+#define PLAYER_NUMBER_OF_ELEMENTS 5
+
 namespace Coordinates {
+
+  struct PlayerData {
+
+    int8_t x;
+    int8_t y;
+    uint8_t yOffset;
+    Stance stance;
+    uint8_t movements;
+
+  };
 
   const uint8_t PROGMEM Player[] = {
 
@@ -413,4 +425,21 @@ namespace Coordinates {
 
   };
  
+
+  inline void readPlayerData(Coordinates::PlayerData &playerData, uint16_t index) {
+
+    int8_t x = static_cast<int8_t>(pgm_read_byte(&Coordinates::Player[(index * PLAYER_NUMBER_OF_ELEMENTS)]));
+    int8_t y = pgm_read_byte(&Coordinates::Player[(index * PLAYER_NUMBER_OF_ELEMENTS) + 1]);
+    uint8_t yOffset = pgm_read_byte(&Coordinates::Player[(index * PLAYER_NUMBER_OF_ELEMENTS) + 2]);
+    Stance stance = static_cast<Stance>(pgm_read_byte(&Coordinates::Player[(index * PLAYER_NUMBER_OF_ELEMENTS) + 3]));
+    uint8_t movements = pgm_read_byte(&Coordinates::Player[(index * PLAYER_NUMBER_OF_ELEMENTS) + 4]);
+
+    playerData.x = x;
+    playerData.y = y;
+    playerData.yOffset = yOffset;
+    playerData.stance = stance;
+    playerData.movements = movements;
+    
+  } 
+
 }

@@ -16,8 +16,16 @@
 
 namespace Coordinates {
 
-  const uint8_t PROGMEM Barrel[660] = {
+  struct BarrelData {
 
+    int8_t x;
+    int8_t y;
+    uint8_t skip;
+    Rotation rotation;
+
+  };
+
+  const uint8_t PROGMEM Barrel[660] = {
 
     //From Position 3 ..
 
@@ -493,5 +501,19 @@ namespace Coordinates {
 
   };
 
-#define BARREL_POSITION_SPLASH_END 142  
+  #define BARREL_POSITION_SPLASH_END 142  
+
+  inline void readBarrelData(Coordinates::BarrelData &barrelData, uint8_t index) {
+
+    int8_t x = pgm_read_byte(&Coordinates::Barrel[(index * BARREL_NUMBER_OF_ELEMENTS)]);
+    int8_t y = pgm_read_byte(&Coordinates::Barrel[(index * BARREL_NUMBER_OF_ELEMENTS) + 1]);
+    uint8_t data = pgm_read_byte(&Coordinates::Barrel[(index * BARREL_NUMBER_OF_ELEMENTS) + 2]);
+
+    barrelData.x = x;
+    barrelData.y = y;
+    barrelData.rotation = static_cast<Rotation>(data & 0x07);
+    barrelData.skip = data  >> 3;
+    
+  } 
+  
 }

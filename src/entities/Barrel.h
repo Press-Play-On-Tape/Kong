@@ -43,7 +43,8 @@ class Barrel {
     uint8_t rotation;
     bool enabled;
     uint8_t enabledCountdown;
-    Rotation rotationDirection;
+
+    Coordinates::BarrelData barrelData;
 
 };
 

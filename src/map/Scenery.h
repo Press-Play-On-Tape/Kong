@@ -7,7 +7,18 @@
 #define SCENERY_PAINT_LAST 64
 #define SCENERY_PAINT_FIRST 0
 
+#define SCENERY_NUMBER_OF_ELEMENTS 3
+
 namespace Coordinates {
+
+  struct SceneryData {
+
+    int8_t x;
+    uint8_t y;
+    Components image;
+    uint8_t mode;
+
+  };
 
   const uint8_t PROGMEM Scenery[] = {
 
@@ -117,5 +128,19 @@ namespace Coordinates {
     0, 0, static_cast<uint8_t>(Components::Girder),
 
   };
- 
- }
+
+  inline void readSceneryData(Coordinates::SceneryData &sceneryData, uint8_t index) {
+
+    int8_t x = pgm_read_byte(&Coordinates::Scenery[(index * SCENERY_NUMBER_OF_ELEMENTS)]);
+    uint8_t y = pgm_read_byte(&Coordinates::Scenery[(index * SCENERY_NUMBER_OF_ELEMENTS) + 1]);
+    uint8_t image = pgm_read_byte(&Coordinates::Scenery[(index * SCENERY_NUMBER_OF_ELEMENTS) + 2]) & 0x1F;
+    uint8_t mode = pgm_read_byte(&Coordinates::Scenery[(index * SCENERY_NUMBER_OF_ELEMENTS) + 2]) & 0xC0;
+
+    sceneryData.x = x;
+    sceneryData.y = y;
+    sceneryData.image = static_cast<Components>(image);
+    sceneryData.mode = mode;
+    
+  } 
+
+}

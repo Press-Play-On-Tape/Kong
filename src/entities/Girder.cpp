@@ -13,20 +13,19 @@ uint8_t Girder::getPosition() {
 
 int8_t Girder::getXPosition() {
 
-  return pgm_read_byte(&Coordinates::Girder[(this->position * 3)]);
+  return girderData.x;
 
 }
 
 int8_t Girder::getYPosition(uint8_t yOffset) {
 
-  uint8_t y = pgm_read_byte(&Coordinates::Girder[(this->position * 3) + 1]);
-  return y - yOffset;
+  return girderData.y - yOffset;
 
 }
 
 uint8_t Girder::getImage() {
 
-  return pgm_read_byte(&Coordinates::Girder[(this->position * 3) + 2]);
+  return static_cast<uint8_t>(girderData.rotation);
 
 }
 
@@ -39,6 +38,7 @@ bool Girder::isEnabled() {
 void Girder::setPosition(uint8_t position) {
 
   this->position = position;
+  Coordinates::readGirderData(girderData, this->position);
 
 }
 
@@ -53,23 +53,19 @@ void Girder::updatePosition() {
   if (!this->enabled) return;
 
   this->position++;
-
-  uint8_t x = pgm_read_byte(&Coordinates::Girder[(this->position * 3)]);
-  uint8_t y = pgm_read_byte(&Coordinates::Girder[(this->position * 3) + 1]);
+  Coordinates::readGirderData(girderData, this->position);
  
-  if (x == 0 && y == 0) {
+  if (girderData.x == 0 && girderData.y == 0) {
 
     this->enabled = false;
     this->position = 0;
 
   }
+
 }
 
 Rect Girder::getRect(uint8_t yOffset) {
 
-  int8_t x = pgm_read_byte(&Coordinates::Girder[(this->position * 3)]);
-  uint8_t y = pgm_read_byte(&Coordinates::Girder[(this->position * 3) + 1]) - yOffset;
-
-  return Rect{x + 1, y + 4, 20, 4 };
+  return Rect{girderData.x + 1, girderData.y + 4, 20, 4 };
 
 }

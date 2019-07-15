@@ -22,20 +22,18 @@ uint8_t PlayGameState::drawScenery(StateMachine & machine, uint8_t paintMode) {
 
   auto & gameStats = machine.getContext().gameStats;
 
-  uint8_t yOffset = this->player.getYOffset();
+  uint8_t yPlayerOffset = this->player.getYOffset();
 
   for (uint8_t i = 0; i < SCENERY_COUNT; i++) {
 
-    int8_t x = pgm_read_byte(&Coordinates::Scenery[(i * 3)]);
-    int8_t y = pgm_read_byte(&Coordinates::Scenery[(i * 3) + 1]) - yOffset;
-    uint8_t image = pgm_read_byte(&Coordinates::Scenery[(i * 3) + 2]) & 0x1F;
-    uint8_t mode = pgm_read_byte(&Coordinates::Scenery[(i * 3) + 2]) & 0xC0;
+    Coordinates::SceneryData sceneryData;
+    Coordinates::readSceneryData(sceneryData, i);
 
-    if ( ((paintMode == SCENERY_PAINT_FIRST) && ((mode & SCENERY_PAINT_LAST) == 0)) || 
-         ((paintMode == SCENERY_PAINT_LAST) && ((mode & SCENERY_PAINT_LAST) > 0))
+    if ( ((paintMode == SCENERY_PAINT_FIRST) && ((sceneryData.mode & SCENERY_PAINT_LAST) == 0)) || 
+         ((paintMode == SCENERY_PAINT_LAST) && ((sceneryData.mode & SCENERY_PAINT_LAST) > 0))
        ) {
 
-      if ((gameStats.mode == GameMode::Hard) || !((mode & SCENERY_LEVEL_2_ONLY) > 0)) {
+      if ((gameStats.mode == GameMode::Hard) || !((sceneryData.mode & SCENERY_LEVEL_2_ONLY) > 0)) {
 
         uint8_t const *imageName = nullptr;
         uint8_t const *mask = nullptr;
@@ -43,21 +41,21 @@ uint8_t PlayGameState::drawScenery(StateMachine & machine, uint8_t paintMode) {
         int8_t xOffset = 0;
         int8_t yOffset = 0;
 
-        switch (image) {
+        switch (sceneryData.image) {
           
-          case static_cast<uint8_t>(Components::Girder):
+          case Components::Girder:
             imageName = Images::Girder;
             break;
           
-          case static_cast<uint8_t>(Components::Girder_OverHead):
+          case Components::Girder_OverHead:
             imageName = Images::Girder_OverHead;
             break;
           
-          case static_cast<uint8_t>(Components::Girder_Small):
+          case Components::Girder_Small:
             imageName = Images::Girder_Small;
             break;
           
-          case static_cast<uint8_t>(Components::Plate1):
+          case Components::Plate1:
             {
               xOffset = this-> plates[0].getXOffset();
               yOffset = this-> plates[0].getYOffset();
@@ -66,7 +64,7 @@ uint8_t PlayGameState::drawScenery(StateMachine & machine, uint8_t paintMode) {
             }
             break;
 
-          case static_cast<uint8_t>(Components::Plate2):
+          case Components::Plate2:
             {
               yOffset = this->plates[1].getYOffset();
               imageIndex = this->plates[1].getImage();
@@ -74,7 +72,7 @@ uint8_t PlayGameState::drawScenery(StateMachine & machine, uint8_t paintMode) {
             }
             break;
           
-          case static_cast<uint8_t>(Components::Plate3):
+          case Components::Plate3:
             {
               xOffset = this-> plates[2].getXOffset();
               yOffset = this->plates[2].getYOffset();
@@ -83,27 +81,27 @@ uint8_t PlayGameState::drawScenery(StateMachine & machine, uint8_t paintMode) {
             }
             break;
           
-          case static_cast<uint8_t>(Components::Ladder):
+          case Components::Ladder:
             imageName = Images::Ladder;
             mask = Images::Ladder_Mask;
             break;
           
-          case static_cast<uint8_t>(Components::Lever):
+          case Components::Lever:
             imageName = Images::Lever;
             imageIndex = static_cast<uint8_t>(this->lever.getPosition());
             break;
           
-          case static_cast<uint8_t>(Components::Cable1):
+          case Components::Cable1:
             imageName = Images::Cable_1;
             mask = Images::Cable_1_Mask;
             break;
           
-          case static_cast<uint8_t>(Components::Cable2):
+          case Components::Cable2:
             imageName = Images::Cable_2;
             mask = Images::Cable_2_Mask;
             break;
           
-          case static_cast<uint8_t>(Components::Crane):
+          case Components::Crane:
             {
               uint8_t intPosition = static_cast<uint8_t>(this->crane.getPosition());
 
@@ -141,17 +139,17 @@ uint8_t PlayGameState::drawScenery(StateMachine & machine, uint8_t paintMode) {
             }
             break;
           
-          case static_cast<uint8_t>(Components::Hook):
+          case Components::Hook:
             imageName = Images::Hook;
             imageIndex = this->hook.getCounter();
             break;
           
-          case static_cast<uint8_t>(Components::Fire):
+          case Components::Fire:
             imageName = Images::Fire;
             imageIndex = this->fire.getCounter();
             break;
           
-          case static_cast<uint8_t>(Components::Dinner):
+          case Components::Dinner:
             if (this->dinner.isVisible()) {
               uint8_t food = this->dinner.getFood();
               imageName = Images::Dinner;
@@ -159,18 +157,18 @@ uint8_t PlayGameState::drawScenery(StateMachine & machine, uint8_t paintMode) {
             }
             break;
           
-          case static_cast<uint8_t>(Components::Fire_Foreground):
+          case Components::Fire_Foreground:
             imageName = Images::Fire_Foreground;
             mask = Images::Fire_Foreground_Mask;
             break;
           
-          case static_cast<uint8_t>(Components::EasyHard):
+          case Components::EasyHard:
             imageName = Images::Mode;
             mask = Images::Mode_Mask;
             imageIndex = static_cast<uint8_t>(gameStats.mode);
             break;
                     
-          case static_cast<uint8_t>(Components::Buildings):
+          case Components::Buildings:
             imageName = Images::Buildings;
             break;
             
@@ -179,10 +177,10 @@ uint8_t PlayGameState::drawScenery(StateMachine & machine, uint8_t paintMode) {
         if (imageName != nullptr) {
 
           if (mask == nullptr) {
-            Sprites::drawSelfMasked(x + xOffset, y + yOffset, imageName, imageIndex);
+            Sprites::drawSelfMasked(sceneryData.x + xOffset, sceneryData.y + yOffset - yPlayerOffset, imageName, imageIndex);
           }
           else {
-            Sprites::drawExternalMask(x + xOffset, y + yOffset, imageName, mask, imageIndex, 0);
+            Sprites::drawExternalMask(sceneryData.x + xOffset, sceneryData.y + yOffset - yPlayerOffset, imageName, mask, imageIndex, 0);
           }
           
         }

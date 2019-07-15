@@ -2,7 +2,17 @@
 
 #include "../utils/Enums.h"
 
+#define GIRDER_NUMBER_OF_ELEMENTS 3
+
 namespace Coordinates {
+
+  struct GirderData {
+
+    int8_t x;
+    uint8_t y;
+    GirderRotation rotation;
+
+  };
 
   const uint8_t PROGMEM Girder[] = {
 
@@ -98,5 +108,17 @@ namespace Coordinates {
     0, 0, static_cast<uint8_t>(GirderRotation::None),
 
   };
+
+  inline void readGirderData(Coordinates::GirderData &girderData, uint8_t index) {
+
+    int8_t x = pgm_read_byte(&Coordinates::Girder[(index * GIRDER_NUMBER_OF_ELEMENTS)]);
+    uint8_t y = pgm_read_byte(&Coordinates::Girder[(index * GIRDER_NUMBER_OF_ELEMENTS) + 1]);
+    uint8_t rotation = pgm_read_byte(&Coordinates::Girder[(index * GIRDER_NUMBER_OF_ELEMENTS) + 2]) & 0x1F;
+
+    girderData.x = x;
+    girderData.y = y;
+    girderData.rotation = static_cast<GirderRotation>(rotation);
+    
+  } 
 
 }	

@@ -32,6 +32,7 @@ class Girder {
     bool enabled = false;
     uint8_t position = 0;
     uint8_t counter = 0;
+    Coordinates::GirderData girderData;
 
 };
 

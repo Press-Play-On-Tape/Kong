@@ -104,9 +104,6 @@ enum class Components : uint8_t {
   Fire_Foreground,
   EasyHard,
   Dinner,
-  LivesLeft3,
-  LivesLeft2,
-  LivesLeft1,
   Buildings
 };
 

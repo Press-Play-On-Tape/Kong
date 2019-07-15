@@ -27,8 +27,6 @@ class Player {
     void setSound(ArduboyTonesExt *sound);
     void setPosition(uint16_t position);
     void setJumpPosition(uint8_t jumpPosition);
-    void setMovements(uint8_t movements);
-    void setYOffset(uint8_t yOffset);
     void setDead(bool dead);
     void setLeaping(bool dead);
     void setFalling(bool falling);
@@ -51,10 +49,8 @@ class Player {
     uint16_t position;
     uint8_t jumpPosition;
     uint8_t movements;
-    uint8_t yOffset;
 
     int8_t prevXPosition;
-    int8_t currXPosition;
     uint8_t runCounter;
     Movements runMovement = Movements::Right;
 
@@ -62,6 +58,7 @@ class Player {
     bool leaping = false;
     bool falling = false;
     ArduboyTonesExt *sound;
+    Coordinates::PlayerData playerData;
 
 };
 

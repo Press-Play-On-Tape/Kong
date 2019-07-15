@@ -46,6 +46,7 @@ bool Barrel::isEnabledOrPending() {
 void Barrel::setPosition(uint8_t position) {
 
   this->position = position;
+  Coordinates::readBarrelData(barrelData, this->position);
 
 }
 
@@ -79,15 +80,13 @@ void Barrel::setEnabled(bool enabled) {
 
 int8_t Barrel::getXPosition() {
 
-  int8_t x = pgm_read_byte(&Coordinates::Barrel[(this->position * BARREL_NUMBER_OF_ELEMENTS)]);
-  return x;
+  return barrelData.x;
 
 }
 
 int8_t Barrel::getYPosition(uint8_t yOffset) {
 
-  int8_t y = pgm_read_byte(&Coordinates::Barrel[(this->position * BARREL_NUMBER_OF_ELEMENTS) + 1]) - yOffset;
-  return y;
+  return barrelData.y - yOffset;
 
 }
 
@@ -95,26 +94,21 @@ void Barrel::updatePosition() {
 
   // Retrieve sjip value from current position (if it exists) ..
 
-  uint8_t skip = pgm_read_byte(&Coordinates::Barrel[(this->position * BARREL_NUMBER_OF_ELEMENTS)+ 2]) >> 3;
-  this->position = this->position + 1 + skip;
+  this->position = this->position + 1 + barrelData.skip;
+  Coordinates::readBarrelData(barrelData, this->position);
 
-  uint8_t x = pgm_read_byte(&Coordinates::Barrel[(this->position * BARREL_NUMBER_OF_ELEMENTS)]);
-  uint8_t y = pgm_read_byte(&Coordinates::Barrel[(this->position * BARREL_NUMBER_OF_ELEMENTS) + 1]);
-
-  if (x == 0 && y == 0) {
+  if (barrelData.x == 0 && barrelData.y == 0) {
 
     this->position = 0;
     this->enabled = false;
 
   }
 
-  this->rotationDirection = static_cast<Rotation>(pgm_read_byte(&Coordinates::Barrel[(this->position * BARREL_NUMBER_OF_ELEMENTS) + 2]) & 0x07);
-
 }
 
 void Barrel::rotate() {
 
-  switch (this->rotationDirection) {
+  switch (barrelData.rotation) {
 
     case Rotation::Right:
       this->rotation = wrapInc(this->rotation, static_cast<uint8_t>(0), static_cast<uint8_t>(2));
@@ -135,7 +129,7 @@ void Barrel::launch(uint8_t startingPosition) {
 
   const uint8_t startingPositions[3] = { BARREL_POSITION_1_START, BARREL_POSITION_2_START, BARREL_POSITION_3_START };
 
-  this->position = startingPositions[startingPosition];
+  this->setPosition(startingPositions[startingPosition]);
   this->aisle = startingPosition;
   this->enabled = true;
 
@@ -153,9 +147,6 @@ void Barrel::decEnabledCountdown() {
 
 Rect Barrel::getRect(uint8_t yOffset) {
 
-  int8_t x = pgm_read_byte(&Coordinates::Barrel[(this->position * BARREL_NUMBER_OF_ELEMENTS)]);
-  int8_t y = pgm_read_byte(&Coordinates::Barrel[(this->position * BARREL_NUMBER_OF_ELEMENTS) + 1]) - yOffset;
-
-  return Rect{x + 2, y + 2, 5, 5 };
+  return Rect{barrelData.x + 2, barrelData.y - yOffset + 2, 5, 5 };
 
 }
