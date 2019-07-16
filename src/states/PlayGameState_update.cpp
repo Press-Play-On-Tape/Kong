@@ -397,9 +397,9 @@ void PlayGameState::update(StateMachine & machine) {
             }
 
             Rect playerRect = this->player.getRect();
-            Rect barrelRect = barrel.getRect(yOffset);
+            Rect barrelRect = barrel.getRect(yOffset, gameStats.mode);
 
-            if (this->playing && arduboy.collide(this->player.getRect(), barrel.getRect(yOffset)) ) {
+            if (this->playing && arduboy.collide(this->player.getRect(), barrelRect)) {
 
 #ifndef IGNORE_BARREL_COLLISIONS
               this->killPlayer(machine);

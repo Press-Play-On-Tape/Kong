@@ -96,7 +96,7 @@ void TitleScreenState::update(StateMachine & machine) {
 		machine.changeState(GameStateType::PlayGameScreen);
 	}
 
-	if (justPressed & UP_BUTTON || justPressed & DOWN_BUTTON || justPressed & LEFT_BUTTON || justPressed & RIGHT_BUTTON) {
+	if (justPressed & UP_BUTTON || justPressed & LEFT_BUTTON || justPressed & RIGHT_BUTTON) {
 		machine.changeState(GameStateType::HighScoreScreen);
 	}
 

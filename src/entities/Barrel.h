@@ -32,7 +32,7 @@ class Barrel {
     void updatePosition();
     void rotate();
     void launch(uint8_t startingPosition);
-    Rect getRect(uint8_t yOffset);
+    Rect getRect(uint8_t yOffset, GameMode mode);
     void decEnabledCountdown();
     bool isEnabledOrPending();
 

@@ -145,8 +145,16 @@ void Barrel::decEnabledCountdown() {
 
 }
 
-Rect Barrel::getRect(uint8_t yOffset) {
+Rect Barrel::getRect(uint8_t yOffset, GameMode mode) {
 
-  return Rect{barrelData.x + 2, barrelData.y - yOffset + 2, 5, 5 };
+  switch (mode) {
+    
+    case GameMode::Easy:
+      return Rect{barrelData.x + 2, barrelData.y - yOffset + 2, 5, 5 };
+
+    case GameMode::Hard:
+      return Rect{barrelData.x + 1, barrelData.y - yOffset + 1, 7, 7 };
+
+  }
 
 }
