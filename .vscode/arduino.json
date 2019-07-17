@@ -1,5 +1,5 @@
 {
-    "sketch": "Kong.ino",
+    "sketch": "Kong/Kong.ino",
     "board": "arduino:avr:leonardo",
     "output": "../build",
     "port": "/dev/cu.usbmodem14601"
