@@ -13,19 +13,19 @@ uint8_t Girder::getPosition() {
 
 int8_t Girder::getXPosition() {
 
-  return girderData.x;
+  return this->girderData.x;
 
 }
 
 int8_t Girder::getYPosition(uint8_t yOffset) {
 
-  return girderData.y - yOffset;
+  return this->girderData.y - yOffset;
 
 }
 
 uint8_t Girder::getImage() {
 
-  return static_cast<uint8_t>(girderData.rotation);
+  return static_cast<uint8_t>(this->girderData.rotation);
 
 }
 
@@ -55,7 +55,7 @@ void Girder::updatePosition() {
   this->position++;
   Coordinates::readGirderData(girderData, this->position);
  
-  if (girderData.x == 0 && girderData.y == 0) {
+  if (this->girderData.x == 0 && this->girderData.y == 0) {
 
     this->enabled = false;
     this->position = 0;
@@ -66,6 +66,6 @@ void Girder::updatePosition() {
 
 Rect Girder::getRect(uint8_t yOffset) {
 
-  return Rect{girderData.x + 1, girderData.y + 4, 20, 4 };
+  return Rect{this->girderData.x + 1, this->girderData.y - yOffset + 4, 20, 4 };
 
 }
