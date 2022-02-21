@@ -54,19 +54,19 @@ void TitleScreenState::update(StateMachine & machine) {
 
 	// Restart ?
 
-	if (pressed & DOWN_BUTTON) {
+	// if (pressed & DOWN_BUTTON) {
 
-		if (this->restart < UPLOAD_DELAY) {
-			this->restart++;
-		}
-		else {
-			arduboy.exitToBootloader();
-		}
+	// 	if (this->restart < UPLOAD_DELAY) {
+	// 		this->restart++;
+	// 	}
+	// 	else {
+	// 		arduboy.exitToBootloader();
+	// 	}
 
-	}
-	else {
-		this->restart = 0;
-	}
+	// }
+	// else {
+	// 	this->restart = 0;
+	// }
 
 
   // Handle barrels ..

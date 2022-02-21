@@ -29,7 +29,7 @@ void SplashScreenState::update(StateMachine & machine) {
 
   if (justPressed > 0 && this->counter > 0) {
 
-    this->counter = 124;
+    this->counter = 20;
 
   }
 
@@ -48,7 +48,7 @@ void SplashScreenState::update(StateMachine & machine) {
 
     this->counter++;
 
-    if (this->counter == 125) machine.changeState(GameStateType::TitleScreen); 
+    if (this->counter == 21) machine.changeState(GameStateType::TitleScreen); 
 
   }
 
